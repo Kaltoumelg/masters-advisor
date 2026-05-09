@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Local data
+app.db
+*.sqlite
+*.csv
+
+# OS / editor files
+.DS_Store

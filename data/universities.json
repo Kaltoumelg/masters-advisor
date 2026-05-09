@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Nova SBE",
+    "city": "Carcavelos",
+    "homepage_url": "https://www.novasbe.unl.pt/en/about-us/nova-sbe-at-a-glance",
+    "masters_index_url": "https://www.novasbe.unl.pt/en/programs/masters",
+    "events_index_url": "https://www.novasbe.unl.pt/en/whats-happening/events"
+  },
+  {
+    "name": "ISCTE Business School",
+    "city": "Lisboa",
+    "homepage_url": "https://www.iscte-iul.pt/",
+    "masters_index_url": "https://www.iscte-iul.pt/cursos/mestrados",
+    "events_index_url": "https://www.iscte-iul.pt/eventos"
+  },
+  {
+    "name": "ISEG",
+    "city": "Lisboa",
+    "homepage_url": "https://www.iseg.ulisboa.pt/en/",
+    "masters_index_url": "https://www.iseg.ulisboa.pt/en/to-study-2/masters-2/",
+    "events_index_url": "https://www.iseg.ulisboa.pt/en/events/"
+  },
+  {
+    "name": "FEP - University of Porto",
+  "city": "Porto",
+  "homepage_url": "https://www.fep.up.pt/",
+  "masters_index_url": "https://programmes.fep.up.pt/masters/",
+  "events_index_url": "https://sigarra.up.pt/fep/en/noticias_geral.lista_noticias"
+  },
+  {
+    "name": "University of Lisbon",
+    "city": "Lisboa",
+    "homepage_url": "https://www.ulisboa.pt/en",
+    "masters_index_url": "https://www.ulisboa.pt/en/info/masters-degree-2nd-cycle",
+    "events_index_url": "https://www.ulisboa.pt/en/info/news"
+  },
+  {
+  "name": "University of Minho - EEG",
+  "city": "Braga",
+  "homepage_url": "https://www.eeg.uminho.pt/en",
+  "masters_index_url": "https://alunos.uminho.pt/EN/candidates/MastersDegrees/Pages/default.aspx",
+  "events_index_url": "https://www.eeg.uminho.pt/en/Pages/news.aspx"
+}
+]
