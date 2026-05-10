@@ -128,15 +128,7 @@ def ingest_university_masters(uni_key: str):
 
 def main():
     init_db()
-
-    target_names = {
-        "University of Minho - EEG",
-    }
-
-    for key, cfg in UNIVERSITIES.items():
-        if cfg.name not in target_names:
-            continue
-        ingest_university_masters(key)
+    ingest_university_masters("university_of_coimbra")
 
 if __name__ == "__main__":
     main()

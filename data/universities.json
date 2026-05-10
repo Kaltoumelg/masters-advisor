@@ -7,13 +7,6 @@
     "events_index_url": "https://www.novasbe.unl.pt/en/whats-happening/events"
   },
   {
-    "name": "ISCTE Business School",
-    "city": "Lisboa",
-    "homepage_url": "https://www.iscte-iul.pt/",
-    "masters_index_url": "https://www.iscte-iul.pt/cursos/mestrados",
-    "events_index_url": "https://www.iscte-iul.pt/eventos"
-  },
-  {
     "name": "ISEG",
     "city": "Lisboa",
     "homepage_url": "https://www.iseg.ulisboa.pt/en/",
@@ -35,10 +28,10 @@
     "events_index_url": "https://www.ulisboa.pt/en/info/news"
   },
   {
-  "name": "University of Minho - EEG",
-  "city": "Braga",
-  "homepage_url": "https://www.eeg.uminho.pt/en",
-  "masters_index_url": "https://alunos.uminho.pt/EN/candidates/MastersDegrees/Pages/default.aspx",
-  "events_index_url": "https://www.eeg.uminho.pt/en/Pages/news.aspx"
-}
+  "name": "University of Coimbra",
+  "city": "Coimbra",
+  "homepage_url": "https://www.uc.pt/en/",
+  "masters_index_url": "https://apps.uc.pt/courses/en/index?q=&ou=&type=SEGUNDO_CONTINUIDADE&type=SEGUNDO_ESPECIALIZACAO_AVANCADA&type=SEGUNDO_FORMACAO_LONGO_VIDA",
+  "events_index_url": "https://www.uc.pt/en/uc-news/articles"
+  }
 ]
