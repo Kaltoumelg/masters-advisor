@@ -1,86 +1,116 @@
+def normalize_gpa(gpa, gpa_scale):
+    try:
+        value = float(str(gpa).replace(",", "."))
+    except Exception:
+        return None
+
+    scale = str(gpa_scale).lower()
+
+    if "20" in scale:
+        return max(0, min(value / 20, 1))
+
+    if "4" in scale:
+        return max(0, min(value / 4, 1))
+
+    if "100" in scale:
+        return max(0, min(value / 100, 1))
+
+    return None
+
+
 def calculate_fit_score(
     master,
     cv_text,
+    gpa,
+    gpa_scale,
     field_focus,
+    career_goals,
+    student_experience,
     language_preference,
     budget_preference,
-    career_goals,
-    scholarship_need,
-    work_experience,
-    study_mode,
+    program_preferences,
     additional_notes,
 ):
-    """
-    Temporary scoring logic.
-    Later you replace this with the real formula.
-    """
-
     master_text = f"""
     {master.get("program_name", "")}
     {master.get("university_name", "")}
     {master.get("city", "")}
     {master.get("summary", "")}
-    """.lower()
-
-    student_text = f"""
-    {cv_text}
-    {' '.join(field_focus)}
-    {language_preference}
-    {budget_preference}
-    {' '.join(career_goals)}
-    {scholarship_need}
-    {work_experience}
-    {study_mode}
-    {additional_notes}
+    {master.get("official_url", "")}
     """.lower()
 
     score = 0
 
     for field in field_focus:
         if field.lower() in master_text:
-            score += 25
+            score += 18
 
     for goal in career_goals:
         if goal.lower() in master_text:
-            score += 20
+            score += 14
+
+    for experience in student_experience:
+        if experience.lower() in master_text:
+            score += 8
+
+    for preference in program_preferences:
+        if preference.lower() in master_text:
+            score += 8
 
     if "english" in language_preference.lower() and "english" in master_text:
-        score += 15
+        score += 10
+    elif "either" in language_preference.lower():
+        score += 5
+    elif "portuguese" in language_preference.lower() and ("portuguese" in master_text or "português" in master_text):
+        score += 10
 
-    if "finance" in student_text and "finance" in master_text:
-        score += 15
-
-    if "analytics" in student_text and ("analytics" in master_text or "data" in master_text):
-        score += 15
-
-    if "management" in student_text and "management" in master_text:
-        score += 15
-
-    if study_mode.lower() in master_text:
+    if "no strict limit" in budget_preference.lower():
+        score += 5
+    elif any(word in master_text for word in ["tuition", "fees", "propina", "scholarship", "funding"]):
         score += 5
 
-    score = min(score, 100)
+    cv_lower = cv_text.lower()
+    for field in field_focus:
+        if field.lower() in cv_lower:
+            score += 5
 
-    return round(score / 100, 2)
+    gpa_normalized = normalize_gpa(gpa, gpa_scale)
+    if gpa_normalized is not None:
+        if gpa_normalized >= 0.8:
+            score += 8
+        elif gpa_normalized >= 0.7:
+            score += 5
+        elif gpa_normalized >= 0.6:
+            score += 2
 
-
-def estimate_acceptance_likelihood(fit_score):
-    """
-    Temporary acceptance likelihood.
-    Later this can use GPA, CV strength, requirements, university selectivity, etc.
-    """
-
-    if fit_score >= 0.75:
-        return "High"
-    elif fit_score >= 0.45:
-        return "Medium"
-    else:
-        return "Low"
+    return round(min(score, 100) / 100, 2)
 
 
-def build_reason(master, fit_score, likelihood):
-    return (
-        f"This program seems to be a {likelihood.lower()} compatibility option because "
-        f"its description aligns with the student's selected interests and goals. "
-        f"The current fit score is {fit_score}."
-    )
+def estimate_acceptance_likelihood(fit_score, gpa, gpa_scale, cv_text):
+    gpa_normalized = normalize_gpa(gpa, gpa_scale)
+
+    profile_boost = 0
+
+    cv_lower = cv_text.lower()
+
+    if any(word in cv_lower for word in ["internship", "estágio", "analyst", "consultant", "research assistant"]):
+        profile_boost += 0.08
+
+    if any(word in cv_lower for word in ["leadership", "president", "coordinator", "volunteer", "volunteering"]):
+        profile_boost += 0.05
+
+    if gpa_normalized is not None:
+        if gpa_normalized >= 0.8:
+            profile_boost += 0.1
+        elif gpa_normalized < 0.6:
+            profile_boost -= 0.1
+
+    competitiveness_score = fit_score + profile_boost
+
+    if competitiveness_score >= 0.8:
+        return "Safety"
+
+    if competitiveness_score >= 0.55:
+        return "Target"
+
+    return "Reach"

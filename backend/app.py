@@ -1,15 +1,3 @@
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def home():
-    return {"message": "GradMatch AI backend is running"}
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 import json
@@ -23,7 +11,7 @@ app = FastAPI(title="GradMatch AI Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # testing only
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,12 +19,6 @@ app.add_middleware(
 
 
 def parse_list_field(value: str):
-    """
-    Lovable should send multi-select values as JSON strings.
-    Example: '["Finance", "Management"]'
-
-    This function also supports comma-separated text as backup.
-    """
     try:
         parsed = json.loads(value)
         if isinstance(parsed, list):
@@ -60,13 +42,16 @@ def health():
 async def recommend(
     cv_file: UploadFile = File(...),
 
+    gpa: str = Form(...),
+    gpa_scale: str = Form(...),
+
     field_focus: str = Form(...),
+    career_goals: str = Form(...),
+    student_experience: str = Form(...),
+
     language_preference: str = Form(...),
     budget_preference: str = Form(...),
-    career_goals: str = Form(...),
-    scholarship_need: str = Form(...),
-    work_experience: str = Form(...),
-    study_mode: str = Form(...),
+    program_preferences: str = Form(...),
 
     additional_notes: str = Form(""),
 ):
@@ -75,30 +60,34 @@ async def recommend(
 
     field_focus_list = parse_list_field(field_focus)
     career_goals_list = parse_list_field(career_goals)
+    student_experience_list = parse_list_field(student_experience)
+    program_preferences_list = parse_list_field(program_preferences)
 
     recommendations = generate_recommendations(
         cv_text=cv_text,
+        gpa=gpa,
+        gpa_scale=gpa_scale,
         field_focus=field_focus_list,
+        career_goals=career_goals_list,
+        student_experience=student_experience_list,
         language_preference=language_preference,
         budget_preference=budget_preference,
-        career_goals=career_goals_list,
-        scholarship_need=scholarship_need,
-        work_experience=work_experience,
-        study_mode=study_mode,
+        program_preferences=program_preferences_list,
         additional_notes=additional_notes,
     )
 
     return {
         "student_inputs_received": {
             "cv_filename": cv_file.filename,
+            "gpa": gpa,
+            "gpa_scale": gpa_scale,
             "field_focus": field_focus_list,
+            "career_goals": career_goals_list,
+            "student_experience": student_experience_list,
             "language_preference": language_preference,
             "budget_preference": budget_preference,
-            "career_goals": career_goals_list,
-            "scholarship_need": scholarship_need,
-            "work_experience": work_experience,
-            "study_mode": study_mode,
+            "program_preferences": program_preferences_list,
             "additional_notes": additional_notes,
         },
-        "recommendations": recommendations
+        "recommendations": recommendations,
     }
