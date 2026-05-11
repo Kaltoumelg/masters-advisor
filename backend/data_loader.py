@@ -1,80 +1,70 @@
-import sqlite3
+import csv
 from pathlib import Path
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
-DB_PATH = ROOT_DIR / "app.db"
 
 
-def load_masters_from_database():
-    """
-    Loads masters from app.db if it exists.
-    Falls back to test data if database is missing or empty.
-    """
-
-    if not DB_PATH.exists():
-        return get_fallback_masters()
-
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-
-        query = """
-        SELECT
-            masters.id,
-            masters.name AS program_name,
-            masters.official_url,
-            masters.summary,
-            masters.city,
-            universities.name AS university_name
-        FROM masters
-        LEFT JOIN universities
-            ON masters.university_id = universities.id
-        """
-
-        rows = cursor.execute(query).fetchall()
-        conn.close()
-
-        masters = [dict(row) for row in rows]
-
-        if not masters:
-            return get_fallback_masters()
-
-        return masters
-
-    except Exception as e:
-        print("Database loading error:", e)
-        return get_fallback_masters()
-
-
-def get_fallback_masters():
-    """
-    Temporary data so Lovable connection can be tested even before app.db is ready.
-    """
-    return [
-        {
-            "id": 1,
-            "program_name": "MSc in Finance",
-            "university_name": "Nova SBE",
-            "city": "Carcavelos",
-            "official_url": "https://www.novasbe.unl.pt/",
-            "summary": "Master in Finance taught in English. Strong fit for students interested in banking, investment, consulting, financial analysis, and international careers. Competitive admissions and high tuition."
-        },
-        {
-            "id": 2,
-            "program_name": "MSc in Management",
-            "university_name": "Católica Lisbon",
-            "city": "Lisbon",
-            "official_url": "https://clsbe.lisboa.ucp.pt/",
-            "summary": "Master in Management taught in English. Good fit for students interested in consulting, strategy, marketing, entrepreneurship, and general management careers."
-        },
-        {
-            "id": 3,
-            "program_name": "MSc in Business Analytics",
-            "university_name": "Nova SBE",
-            "city": "Carcavelos",
-            "official_url": "https://www.novasbe.unl.pt/",
-            "summary": "Master focused on analytics, data, management, business intelligence, statistics, and decision-making. Strong fit for students with quantitative interests."
-        }
+def find_file(filename: str) -> Path | None:
+    possible_paths = [
+        ROOT_DIR / filename,
+        ROOT_DIR / "data" / filename,
+        Path(__file__).resolve().parent / filename,
+        Path(__file__).resolve().parent / "data" / filename,
     ]
+
+    for path in possible_paths:
+        if path.exists():
+            return path
+
+    return None
+
+
+def read_csv_file(filename: str):
+    path = find_file(filename)
+
+    if not path:
+        print(f"WARNING: {filename} not found.")
+        return []
+
+    with open(path, "r", encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def load_all_matching_data():
+    masters = read_csv_file("master_programs.csv")
+    university_life = read_csv_file("university_life.csv")
+    university_overviews = read_csv_file("university_overviews.csv")
+
+    life_by_university = {
+        str(row.get("university_id", "")): row
+        for row in university_life
+    }
+
+    overview_by_university = {
+        str(row.get("university_id", "")): row
+        for row in university_overviews
+    }
+
+    enriched_masters = []
+
+    for master in masters:
+        university_id = str(master.get("university_id", ""))
+
+        life = life_by_university.get(university_id, {})
+        overview = overview_by_university.get(university_id, {})
+
+        enriched_masters.append({
+            "id": master.get("id", ""),
+            "university_id": university_id,
+            "program_name": master.get("name", "Unknown program"),
+            "official_url": master.get("official_url", ""),
+            "program_summary": master.get("summary", ""),
+            "city": master.get("city", ""),
+            "last_fetched_at": master.get("last_fetched_at", ""),
+            "university_life_summary": life.get("summary", ""),
+            "university_overview_summary": overview.get("summary", ""),
+            "university_source_url": overview.get("source_url", "") or life.get("source_url", ""),
+        })
+
+    return enriched_masters
