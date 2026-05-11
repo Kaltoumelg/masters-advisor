@@ -6,6 +6,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 from .db import Base
 
+from datetime import datetime
+
 
 class University(Base):
     __tablename__ = "universities"
@@ -52,3 +54,36 @@ class Event(Base):
     )
 
     university = relationship("University", back_populates="events")
+
+
+
+
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, unique=True, index=True, nullable=False)
+    cv_text = Column(Text, nullable=False)
+    quiz_scores_json = Column(Text, nullable=True)  # store quiz answers/scores as JSON string
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
+
+class UniversityOverview(Base):
+    __tablename__ = "university_overviews"
+
+    id = Column(Integer, primary_key=True)
+    university_id = Column(Integer, ForeignKey("universities.id"), index=True, nullable=False)
+    source_url = Column(String, nullable=False)
+    raw_text = Column(Text, nullable=False)
+    summary = Column(Text, nullable=True)
+
+
+class UniversityLife(Base):
+    __tablename__ = "university_life"
+
+    id = Column(Integer, primary_key=True)
+    university_id = Column(Integer, ForeignKey("universities.id"), index=True, nullable=False)
+    source_url = Column(String, nullable=False)
+    raw_text = Column(Text, nullable=False)
+    summary = Column(Text, nullable=True)

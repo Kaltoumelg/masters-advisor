@@ -4,34 +4,34 @@
     "city": "Carcavelos",
     "homepage_url": "https://www.novasbe.unl.pt/en/about-us/nova-sbe-at-a-glance",
     "masters_index_url": "https://www.novasbe.unl.pt/en/programs/masters",
-    "events_index_url": "https://www.novasbe.unl.pt/en/whats-happening/events"
+    "events_index_url": "https://www.novasbe.unl.pt/en/life-at-nova-sbe/nova-way-of-life"
   },
   {
     "name": "ISEG",
     "city": "Lisboa",
-    "homepage_url": "https://www.iseg.ulisboa.pt/en/",
+    "homepage_url": "https://www.iseg.ulisboa.pt/en/about/",
     "masters_index_url": "https://www.iseg.ulisboa.pt/en/to-study-2/masters-2/",
-    "events_index_url": "https://www.iseg.ulisboa.pt/en/events/"
+    "events_index_url": "https://www.iseg.ulisboa.pt/en/live-iseg/"
   },
   {
     "name": "FEP - University of Porto",
   "city": "Porto",
-  "homepage_url": "https://www.fep.up.pt/",
+  "homepage_url": "https://www.up.pt/portal/en/explore/about-uporto/rankings/",
   "masters_index_url": "https://programmes.fep.up.pt/masters/",
-  "events_index_url": "https://sigarra.up.pt/fep/en/noticias_geral.lista_noticias"
+  "events_index_url": "https://www.up.pt/fep/en/information-for-students/"
   },
   {
     "name": "University of Lisbon",
     "city": "Lisboa",
-    "homepage_url": "https://www.ulisboa.pt/en",
+    "homepage_url": "https://www.ulisboa.pt/en/sobre-nos",
     "masters_index_url": "https://www.ulisboa.pt/en/info/masters-degree-2nd-cycle",
-    "events_index_url": "https://www.ulisboa.pt/en/info/news"
+    "events_index_url": "https://www.ulisboa.pt/en/info/culture"
   },
   {
   "name": "University of Coimbra",
   "city": "Coimbra",
-  "homepage_url": "https://www.uc.pt/en/",
+  "homepage_url": "https://www.uc.pt/en/sobrenos/",
   "masters_index_url": "https://apps.uc.pt/courses/en/index?q=&ou=&type=SEGUNDO_CONTINUIDADE&type=SEGUNDO_ESPECIALIZACAO_AVANCADA&type=SEGUNDO_FORMACAO_LONGO_VIDA",
-  "events_index_url": "https://www.uc.pt/en/uc-news/articles"
+  "events_index_url": "https://www.uc.pt/en/uc-sports/"
   }
 ]
