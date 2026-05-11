@@ -128,7 +128,9 @@ def ingest_university_masters(uni_key: str):
 
 def main():
     init_db()
-    ingest_university_masters("university_of_coimbra")
+
+    for key, cfg  in UNIVERSITIES.items():
+        ingest_university_masters(key)
 
 if __name__ == "__main__":
     main()
