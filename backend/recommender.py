@@ -1,5 +1,24 @@
 from data_loader import load_all_matching_data
-from scoring import evaluate_master_with_gemini
+from scoring import conservative_filter_masters, rank_masters_with_gemini
+
+
+def fallback_recommendations(masters):
+    results = []
+
+    for master in masters[:3]:
+        results.append({
+            "program_name": master.get("program_name", "Unknown program"),
+            "university": master.get("university", ""),
+            "location": master.get("city", ""),
+            "fit_score": 0.5,
+            "likelihood": "Medium",
+            "program_snapshot": "This program may be relevant, but the AI ranking system could not complete the full evaluation.",
+            "why_it_matches": "There is some potential overlap with the student's selected preferences, but the match could not be fully evaluated.",
+            "what_to_improve": "Review the program requirements carefully and tailor the application to show relevant academic and professional fit.",
+            "program_url": master.get("official_url", ""),
+        })
+
+    return results
 
 
 def generate_recommendations(
@@ -29,19 +48,18 @@ def generate_recommendations(
         "additional_notes": additional_notes,
     }
 
-    evaluated = []
-
-    for master in masters:
-        try:
-            result = evaluate_master_with_gemini(master, student_profile)
-            evaluated.append(result)
-        except Exception as e:
-            print(f"Gemini failed for {master.get('program_name')}: {e}")
-
-    evaluated = sorted(
-        evaluated,
-        key=lambda item: item.get("fit_score", 0),
-        reverse=True,
+    candidate_masters = conservative_filter_masters(
+        masters=masters,
+        student_profile=student_profile,
     )
 
-    return evaluated[:3]
+    try:
+        recommendations = rank_masters_with_gemini(
+            student_profile=student_profile,
+            masters=candidate_masters,
+        )
+        return recommendations
+
+    except Exception as e:
+        print("Gemini ranking failed:", e)
+        return fallback_recommendations(candidate_masters)
