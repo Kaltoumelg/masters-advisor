@@ -204,7 +204,7 @@ Rules for output:
 - Return exactly 3 recommendations if at least 3 candidates exist.
 - If fewer than 3 candidates exist, return all available candidates.
 - fit_score must be decimal between 0 and 1.
-- likelihood must be High, Medium, or Low.
+- likelihood must be High, Medium, or Low (if the university has admission requirements, rank it by seeing how much the student satisfies them. if there are no requirements, base it on whether the masters program is highly ranked (means more competitive, means less likelihood, unless the student has a good academic standing))
 - Do not use 'Reach', 'Target', or 'Safety'.
 - Do not show University ID.
 - program_snapshot must not be a long raw summary.
