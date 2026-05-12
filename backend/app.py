@@ -38,7 +38,7 @@ def health():
     return {"status": "ok"}
 
 
-    @app.get("/version")
+@app.get("/version")
 def version():
     return {
         "version": "gemini-ai-matching-v1",
@@ -51,25 +51,22 @@ def version():
             "program_snapshot",
             "why_it_matches",
             "what_to_improve",
-            "program_url"
-        ]
+            "program_url",
+        ],
     }
+
 
 @app.post("/recommend")
 async def recommend(
     cv_file: UploadFile = File(...),
-
-    gpa: str = Form(...),
-    gpa_scale: str = Form(...),
-
+    gpa: str = Form(""),
+    gpa_scale: str = Form(""),
     field_focus: str = Form(...),
     career_goals: str = Form(...),
     student_experience: str = Form(...),
-
     language_preference: str = Form(...),
     budget_preference: str = Form(...),
     program_preferences: str = Form(...),
-
     additional_notes: str = Form(""),
 ):
     cv_bytes = await cv_file.read()
@@ -108,4 +105,3 @@ async def recommend(
         },
         "recommendations": recommendations,
     }
-    
