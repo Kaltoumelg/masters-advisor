@@ -91,3 +91,20 @@ async def recommend(
         },
         "recommendations": recommendations,
     }
+    
+    @app.get("/version")
+def version():
+    return {
+        "version": "gemini-ai-matching-v1",
+        "expected_outputs": [
+            "program_name",
+            "university",
+            "location",
+            "fit_score",
+            "likelihood",
+            "program_snapshot",
+            "why_it_matches",
+            "what_to_improve",
+            "program_url"
+        ]
+    }
