@@ -1,5 +1,5 @@
 from data_loader import load_all_matching_data
-from scoring import score_master_with_ai
+from scoring import evaluate_master_with_gemini
 
 
 def generate_recommendations(
@@ -29,23 +29,19 @@ def generate_recommendations(
         "additional_notes": additional_notes,
     }
 
-    results = []
+    evaluated = []
 
     for master in masters:
-        ai_score = score_master_with_ai(master, student_profile)
+        try:
+            result = evaluate_master_with_gemini(master, student_profile)
+            evaluated.append(result)
+        except Exception as e:
+            print(f"Gemini failed for {master.get('program_name')}: {e}")
 
-        results.append({
-            "program_name": master.get("program_name", "Unknown program"),
-            "university": f"University ID {master.get('university_id', '')}",
-            "location": master.get("city", ""),
-            "fit_score": round(ai_score["fit_score"] / 100, 2),
-            "acceptance_likelihood": ai_score["acceptance_likelihood"],
-            "why_it_matches": ai_score["why_it_matches"],
-            "what_to_improve": ai_score["what_to_improve"],
-            "summary": master.get("program_summary", ""),
-            "program_url": master.get("official_url", ""),
-        })
+    evaluated = sorted(
+        evaluated,
+        key=lambda item: item.get("fit_score", 0),
+        reverse=True,
+    )
 
-    results = sorted(results, key=lambda x: x["fit_score"], reverse=True)
-
-    return results[:5]
+    return evaluated[:3]
