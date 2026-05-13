@@ -17,6 +17,8 @@ from src.models import University, MasterProgram
 from src.generic_scraper import find_program_pages, collect_program_sections
 from src.summarizer import summarize_program_texts
 from src.http_client import fetch_html
+from src.ingest_uni_homepages import ingest_university_homepages
+from src.ingest_uni_life import ingest_university_life
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -131,6 +133,9 @@ def main():
 
     for key, cfg  in UNIVERSITIES.items():
         ingest_university_masters(key)
+
+    ingest_university_homepages()
+    ingest_university_life()
 
 if __name__ == "__main__":
     main()
